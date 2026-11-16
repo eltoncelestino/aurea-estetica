@@ -1,0 +1,12 @@
+{
+  "name": "Aurea - Novo lead",
+  "nodes": [
+    { "parameters": { "httpMethod": "POST", "path": "aurea-lead" }, "name": "Webhook", "type": "n8n-nodes-base.webhook", "typeVersion": 1, "position": [200, 300] },
+    { "parameters": { "method": "POST", "url": "https://graph.facebook.com/v20.0/SEU_PHONE_NUMBER_ID/messages", "sendHeaders": true, "headerParameters": { "parameters": [{ "name": "Authorization", "value": "Bearer SEU_TOKEN" }] }, "sendBody": true, "specifyBody": "json", "jsonBody": "={\n \"messaging_product\": \"whatsapp\",\n \"to\": \"{{ $json.body.whatsapp }}\",\n \"type\": \"template\",\n \"template\": { \"name\": \"boas_vindas_lead\", \"language\": { \"code\": \"pt_BR\" }, \"components\": [{ \"type\": \"body\", \"parameters\": [{ \"type\": \"text\", \"text\": \"{{ $json.body.nome }}\" }, { \"type\": \"text\", \"text\": \"{{ $json.body.interesse }}\" }] }] }\n}" }, "name": "Boas-vindas WhatsApp", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4, "position": [450, 300] },
+    { "parameters": { "amount": 24, "unit": "hours" }, "name": "Esperar 24h", "type": "n8n-nodes-base.wait", "typeVersion": 1, "position": [700, 300] }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "Boas-vindas WhatsApp", "type": "main", "index": 0 }]] },
+    "Boas-vindas WhatsApp": { "main": [[{ "node": "Esperar 24h", "type": "main", "index": 0 }]] }
+  }
+}
